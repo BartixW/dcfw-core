@@ -1,0 +1,40 @@
+{
+   "name": "@dcfw/core",
+   "version": "0.1.0",
+   "description": "Modern framework for creating Discord apps",
+   "type": "module",
+   "main": "./dist/index.js",
+   "types": "./dist/index.d.ts",
+   "bin": {
+      "dcfw": "./dist/cli.js"
+   },
+   "files": [
+      "dist"
+   ],
+   "scripts": {
+      "build": "tsup src/index.ts src/cli.ts --format esm --dts --clean",
+      "dev": "tsup src/index.ts src/cli.ts --format esm --dts --watch",
+      "prepublishOnly": "pnpm build"
+   },
+   "dependencies": {
+      "cac": "^7.0.0",
+      "chokidar": "^5.0.0",
+      "esbuild": "^0.28.1",
+      "picocolors": "^1.1.1"
+   },
+   "devDependencies": {
+      "@biomejs/biome": "2.5.1",
+      "@types/node": "^26.0.1",
+      "tsup": "^8.5.1",
+      "typescript": "^6.0.3"
+   },
+   "peerDependencies": {
+      "discord.js": "^14.26.4",
+      "tsx": "^4.22.4"
+   },
+   "peerDependenciesMeta": {
+      "discord.js": {
+         "optional": true
+      }
+   }
+}
