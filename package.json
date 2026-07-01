@@ -14,7 +14,7 @@
    "scripts": {
       "build": "tsup src/index.ts src/cli.ts --format esm --dts --clean",
       "dev": "tsup src/index.ts src/cli.ts --format esm --dts --watch",
-      "prepublishOnly": "pnpm build"
+      "prepare": "pnpm run build"
    },
    "dependencies": {
       "cac": "^7.0.0",
