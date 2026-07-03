@@ -1,4 +1,4 @@
-export { startAppRuntime } from "@/runtime/main.js";
+export { createAppRuntime } from "@/runtime/main.js";
 export { handleProd } from "@/runtime/prod.js";
 export { defineCommandConfig } from "@/types/command.js";
 export { defineConfig } from "@/types/config.js";
