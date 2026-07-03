@@ -1,5 +1,10 @@
 import { Client, type ClientOptions } from "discord.js";
 import type { CommandModule } from "@/types/command.js";
+import type { EventModule } from "@/types/event.js";
+import type {
+   ButtonInteractionModule,
+   ModalInteractionModule,
+} from "@/types/interaction.js";
 import { handleDev } from "./dev.js";
 
 export async function startAppRuntime(clientOptions: ClientOptions) {
@@ -24,19 +29,19 @@ export async function startAppRuntime(clientOptions: ClientOptions) {
    });
 
    Object.defineProperty(globalThis, "__dcfw_loadedEvents", {
-      value: new Map<string, CommandModule>(),
+      value: new Map<string, EventModule>(),
       writable: false,
       configurable: true,
    });
 
    Object.defineProperty(globalThis, "__dcfw_loadedButtons", {
-      value: new Map<string, CommandModule>(),
+      value: new Map<string, ModalInteractionModule>(),
       writable: false,
       configurable: true,
    });
 
    Object.defineProperty(globalThis, "__dcfw_loadedModals", {
-      value: new Map<string, CommandModule>(),
+      value: new Map<string, ButtonInteractionModule>(),
       writable: false,
       configurable: true,
    });
