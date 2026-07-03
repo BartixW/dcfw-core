@@ -7,12 +7,16 @@ import type {
 } from "@/types/interaction.js";
 import { handleDev } from "./dev.js";
 
-export async function startAppRuntime(clientOptions: ClientOptions) {
+export async function createAppRuntime(clientOptions: ClientOptions) {
    Object.defineProperty(globalThis, "__DEV__", {
       value: process.env.DCFW_ENV === "development",
       writable: false,
       configurable: true,
    });
+
+   if (__DEV__) {
+      process.loadEnvFile();
+   }
 
    const client = new Client(clientOptions);
 
@@ -46,26 +50,27 @@ export async function startAppRuntime(clientOptions: ClientOptions) {
       configurable: true,
    });
 
-   if (__DEV__) {
-      process.loadEnvFile();
-      await client.login(process.env.DISCORD_TOKEN);
-      await handleDev(client);
-   } else {
-      await client.login(process.env.DISCORD_TOKEN);
-
-      // @ts-expect-error
-      if (globalThis.__dcfw_injectProd) {
-         // @ts-expect-error
-         await globalThis.__dcfw_injectProd(client);
-      } else {
-         console.error(
-            "[DCFW] Critical production error: Production payload was not injected during build!",
-         );
-      }
-   }
-
    return {
       discordJsClient: client,
+
+      async login() {
+         await client.login(process.env.DISCORD_TOKEN);
+
+         if (__DEV__) {
+            await handleDev(client);
+         } else {
+            // @ts-expect-error
+            if (globalThis.__dcfw_injectProd) {
+               // @ts-expect-error
+               await globalThis.__dcfw_injectProd(client);
+            } else {
+               console.error(
+                  "[DCFW] Critical production error: Production payload was not injected during build!",
+               );
+            }
+         }
+      },
+
       async destroy() {
          await client.destroy();
       },
