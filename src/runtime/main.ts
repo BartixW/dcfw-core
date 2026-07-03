@@ -76,3 +76,7 @@ export async function createAppRuntime(clientOptions: ClientOptions) {
       },
    };
 }
+
+export function getCommandId(commandName: string): string | undefined {
+   return __dcfw_commandIds.get(commandName);
+}
