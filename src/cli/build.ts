@@ -104,6 +104,9 @@ import "../${join(config.sourceDir, config.entryPoint)}";
                name: "external-all-except-project",
                setup(build) {
                   build.onResolve({ filter: /^[^./]|^\.[^./]/ }, (args) => {
+                     if (args.path.startsWith("@/")) {
+                        return undefined;
+                     }
                      return { path: args.path, external: true };
                   });
                },
