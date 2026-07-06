@@ -54,21 +54,26 @@ export async function createAppRuntime(clientOptions: ClientOptions) {
       discordJsClient: client,
 
       async login() {
-         await client.login(process.env.DISCORD_TOKEN);
-
-         if (__DEV__) {
-            await handleDev(client);
-         } else {
-            // @ts-expect-error
-            if (globalThis.__dcfw_injectProd) {
-               // @ts-expect-error
-               await globalThis.__dcfw_injectProd(client);
+         client.once("ready", async (readyClient) => {
+            if (__DEV__) {
+               await handleDev(readyClient);
             } else {
-               console.error(
-                  "[DCFW] Critical production error: Production payload was not injected during build!",
-               );
+               // @ts-expect-error
+               if (globalThis.__dcfw_injectProd) {
+                  // @ts-expect-error
+                  await globalThis.__dcfw_injectProd(readyClient);
+               }
             }
-         }
+
+            const readyEvent = __dcfw_loadedEvents.get("ready");
+            if (readyEvent) {
+               for (const executeFn of readyEvent.values()) {
+                  await executeFn(readyClient);
+               }
+            }
+         });
+
+         await client.login(process.env.DISCORD_TOKEN);
       },
 
       async destroy() {
