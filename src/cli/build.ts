@@ -79,7 +79,7 @@ globalThis.__dcfw_injectProd = async (client: any) => {
    await handleProd(client);
 };
 
-import "../${join(config.sourceDir, config.entryPoint)}"; 
+await import("../${join(config.sourceDir, config.entryPoint)}"); 
 `.trim();
 
    const entrypointPath = join(outputDir, "entrypoint.ts");
