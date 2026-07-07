@@ -65,16 +65,6 @@ export async function handleDev(client: Client) {
       }
    });
 
-   watcher.on("ready", async () => {
-      isReady = true;
-      console.log(
-         pc.green(
-            "Initial scan completed. Synchronizing commands with Discord...",
-         ),
-      );
-      await refreshDevCommands(client);
-   });
-
    async function routeAndLoadFile(
       filePath: string,
       client: Client,
@@ -186,6 +176,19 @@ export async function handleDev(client: Client) {
             // ignore completly
          }
       }
+   });
+
+   return new Promise((resolve) => {
+      watcher.on("ready", async () => {
+         isReady = true;
+         console.log(pc.green("Initial scan completed. Synchronizing commands with Discord..."));
+
+         // Tutaj client.application!.id już idealnie działa, bo jesteśmy wewnątrz ready bota
+         await refreshDevCommands(client);
+
+         // 🏁 DOPIERO TUTAJ odblokowujemy await w metodzie login()!
+         resolve(true);
+      });
    });
 }
 
